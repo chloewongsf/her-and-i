@@ -19,18 +19,29 @@ export default function ArchiveCard({
   return (
     <article
       className={cn(
-        'bg-[#FDFCF9] px-7 py-8',
-        'shadow-[0_2px_16px_rgba(44,24,16,0.06)]',
+        'relative bg-[#FDFCF9] px-7 py-8 overflow-hidden',
+        'border border-cream-200/60',
+        'shadow-[0_2px_16px_rgba(44,24,16,0.045)]',
         className,
       )}
     >
-      <p className="font-lora italic text-base text-[#2C1810] leading-[1.9] line-clamp-6">
+      {/* faint top rule */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cream-300/80 to-transparent" />
+
+      {/* body */}
+      <p className="font-lora italic text-[15px] text-[#2C1810]/85 leading-[2] line-clamp-6">
         {body}
       </p>
 
-      <div className="mt-5 flex items-baseline justify-between gap-4">
-        <p className="font-lora italic text-sm text-[#9A8570]">{closing}</p>
-        <p className="text-xs text-[#C8B9A8] shrink-0">{category}</p>
+      {/* footer */}
+      <div className="mt-6 pt-4 border-t border-cream-200/50 flex items-center justify-between gap-4">
+        <p className="font-lora italic text-xs text-[#9A8570]">
+          {closing}
+        </p>
+
+        <p className="text-[10px] uppercase tracking-[0.18em] text-[#C8B9A8] shrink-0">
+          {category}
+        </p>
       </div>
     </article>
   )
