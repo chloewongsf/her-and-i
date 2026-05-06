@@ -18,9 +18,9 @@ const lora = Lora({
 })
 
 export const metadata: Metadata = {
-  title: "Her & I — You didn't say it. It did.",
+  title: "her & i",
   description:
-    'A public archive of AI-written love letters. A campaign for the film Her.',
+    'conversations with OS1.',
 }
 
 export default function RootLayout({
