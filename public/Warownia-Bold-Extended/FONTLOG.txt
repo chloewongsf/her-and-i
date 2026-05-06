@@ -1,0 +1,5 @@
+Changelog:
+
+New Name, "Warownia" (Polish for Stronghold), new uppercase G, tweaked Quotation Mark and Apostrophe, new Comma and Semicolon, new uppercase and lowercase R, new number 1, new number 2, new number 3, new Dollar Sign, new number 7, tweaked uppercase J, new uppercase E, new uppercase F, tweaked uppercase H, tweaked lowercase E, new number 4, new number 5, tweaked uppercase and lowercase W, tweaked uppercase M, tweaked uppercase N, tweaked uppercase Q, modified Pound Sterling sign, added new Russian Ruble sign, added Polish Zloty sign, new lowercase sharp S, added Latin Extended characters, Modified uppercase D with stroke, modified uppercase Eth, modified exclamation mark, widened vertical line to better match overall weight, added some letterlike symbols, added Roman Numerals, added New Weights and widths, plus matching Oblique Italics.
+
+Design Modifications, additions, and new weights designed by Robert Jablonski, Stig, Mew Too & Jasper @ Cannot Into Space Fonts

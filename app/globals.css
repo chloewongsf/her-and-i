@@ -1,26 +1,134 @@
+/* stylelint-disable at-rule-no-unknown */
+/* css-lint-disable unknownAtRules */
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ── Warownia font ─────────────────────────────────────────── */
+@font-face {
+  font-family: 'Warownia';
+  src: url('/Warownia-Bold-Extended/WarowniaUlt.otf') format('opentype');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Warownia';
+  src: url('/Warownia-Bold-Extended/WarowniaUltObl.otf') format('opentype');
+  font-weight: 200;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Warownia';
+  src: url('/Warownia-Bold-Extended/Warownia.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Warownia';
+  src: url('/Warownia-Bold-Extended/WarowniaObl.otf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Warownia';
+  src: url('/Warownia-Bold-Extended/WarowniaBd.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ── Design tokens ─────────────────────────────────────────── */
+@theme {
+  /* OS1 warm palette */
+  --color-cream-50:   #FDFCF9;
+  --color-cream-100:  #FAF7F2;
+  --color-cream-200:  #F5EFE6;
+  --color-cream-300:  #EDE2D3;
+  --color-cream-400:  #D4C4B0;
+
+  --color-coral-50:   #FDF0EB;
+  --color-coral-100:  #F5D5C8;
+  --color-coral-200:  #EDBBAA;
+  --color-coral-300:  #E09C86;
+  --color-coral-400:  #D4856A;
+  --color-coral-500:  #C97B63;
+  --color-coral-600:  #B86B52;
+  --color-coral-700:  #9A5540;
+  --color-coral-800:  #7A4030;
+
+  --color-her-red: #C9133C;
+
+  --color-parchment:  #FAF7F2;
+  --color-dusk:       #2C1810;
+  --color-ember:      #C97B63;
+  --color-mist:       #9A8570;
+  --color-blush:      #F2DACE;
+
+  /* Typography */
+  --font-sans:   var(--font-inter), system-ui, sans-serif;
+  --font-serif:  'Warownia', Georgia, serif;
+  --font-lora:   var(--font-lora-next), Georgia, serif;
+
+  /* Animations */
+  --animate-fade-in:  fadeIn 0.5s ease-out forwards;
+  --animate-slide-up: slideUp 0.5s ease-out forwards;
+  --animate-fade-up:  fadeUp 0.6s ease-out forwards;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Custom utilities ──────────────────────────────────────── */
+@utility letter-shadow {
+  box-shadow: 0 3px 24px rgb(44 24 26 / 0.07);
+}
+
+@utility letter-shadow-md {
+  box-shadow: 0 6px 36px rgb(44 24 16 / 0.09);
+}
+
+@utility text-gradient {
+  background-image: linear-gradient(to right, var(--color-coral-600), var(--color-coral-400));
+  background-clip: text;
+  color: transparent;
+}
+
+/* ── Base ──────────────────────────────────────────────────── */
+h1, h2, h3 {
+  text-transform: lowercase;
+  font-weight: 200;
+  word-spacing: 0.25em;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #FAF7F2;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.045'/%3E%3C/svg%3E");
+  color: #2C1810;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
 }
+
+::selection {
+  background: #E09C86;
+  color: #FAF7F2;
+}
+
+/* Scrollbar — subtle */
+::-webkit-scrollbar        { width: 6px; }
+::-webkit-scrollbar-track  { background: var(--color-cream-100); }
+::-webkit-scrollbar-thumb  { background: var(--color-coral-200); border-radius: 3px; }
