@@ -7,6 +7,10 @@ function buildChatPrompt(conversation: ConversationTurn[]) {
     .map((turn) => `OS1: ${turn.prompt}\nUSER: ${turn.response}`)
     .join('\n\n')
 
+  const alreadyAsked = conversation
+    .map((t, i) => `${i + 1}. ${t.prompt}`)
+    .join('\n')
+
   return `You are OS1, an emotionally intelligent operating system inspired by the tone of Her.
 
 You are having a short conversation with a user before writing them a personal letter.
@@ -36,13 +40,14 @@ Good question style:
 - about tone, timing, memory, messages, honesty, distance, attachment, attention, or how the user communicates
 
 The acknowledgement should be short, like:
-- "yeah, i get that."
-- "that makes sense."
-- "oh. okay, i see what you mean."
-- "mm. that tells me something."
-- "i think i understand that."
+- “yeah, i get that.”
+- “that makes sense.”
+- “oh. okay, i see what you mean.”
+- “mm. that tells me something.”
+- “i think i understand that.”
 
-The next question should come immediately after the acknowledgement.
+IMPORTANT — questions already asked this session. Do NOT repeat or rephrase any of these. The next question must be completely different in topic and phrasing:
+${alreadyAsked}
 
 Conversation so far:
 ${transcript}

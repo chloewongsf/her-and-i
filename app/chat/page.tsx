@@ -22,6 +22,16 @@ const TYPING_DELAY = 1100
 const SEND_GAP    = 350
 const MAX_TURNS = 7
 
+const FALLBACK_QUESTIONS = [
+  "what's something you've been meaning to say to someone?",
+  'do you find it easier to write things or say them out loud?',
+  "is there someone you think about more than you'd expect?",
+  'when something is hard to say — do you go quiet, or talk around it?',
+  "what's something small that's been sitting with you today?",
+  'do you usually know what you feel in the moment, or does it come later?',
+  'are you someone who rereads old messages?',
+]
+
 const OPENING_PROMPTS = [
   "hi. i'm here. what were you just thinking about? it's ok if it's nothing.",
   "hey. is there something already sitting with you, or did you just end up here?",
@@ -53,10 +63,11 @@ export default function ChatPage() {
   const [notification, setNotification]   = useState('')
   const [progress, setProgress]           = useState(0)
 
-  const messagesEndRef      = useRef<HTMLDivElement>(null)
-  const scrollContainerRef  = useRef<HTMLDivElement>(null)
-  const inputRef            = useRef<HTMLInputElement>(null)
-  const progressIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const messagesEndRef        = useRef<HTMLDivElement>(null)
+  const scrollContainerRef    = useRef<HTMLDivElement>(null)
+  const inputRef              = useRef<HTMLInputElement>(null)
+  const progressIntervalRef   = useRef<ReturnType<typeof setInterval> | null>(null)
+  const usedFallbacksRef      = useRef<Set<string>>(new Set())
   const router              = useRouter()
 
   useEffect(() => {
@@ -172,13 +183,10 @@ export default function ChatPage() {
         }, TYPING_DELAY + 400)
       }, SEND_GAP)
     } catch {
-      const fallbackPrompts = [
-        "what's something you've been meaning to say to someone?",
-        'do you find it easier to write things or say them out loud?',
-        "is there someone you think about more than you'd expect?",
-        'when something is hard to say — do you go quiet, or talk around it?',
-      ]
-      const fallback = fallbackPrompts[Math.floor(Math.random() * fallbackPrompts.length)]
+      const unused = FALLBACK_QUESTIONS.filter((q) => !usedFallbacksRef.current.has(q))
+      const pool   = unused.length > 0 ? unused : FALLBACK_QUESTIONS
+      const fallback = pool[Math.floor(Math.random() * pool.length)]
+      usedFallbacksRef.current.add(fallback)
 
       setTimeout(() => {
         deliverAIMessage('mm.', `ai-ack-fallback-${Date.now()}`)
