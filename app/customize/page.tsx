@@ -68,6 +68,16 @@ export default function CustomizePage() {
 
   const handlePublish = async () => {
     setPublished(true)
+    const published = {
+      id: `pub-${Date.now()}`,
+      body: letter.body,
+      closing: letter.closing,
+      category: letter.category,
+      timestamp: 'just now',
+      frame: 'none',
+    }
+    // Save own letter locally so it always appears first in the archive
+    localStorage.setItem('her-and-i-published', JSON.stringify(published))
     try {
       await fetch('/api/publish', {
         method: 'POST',

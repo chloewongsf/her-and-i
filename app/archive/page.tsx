@@ -5,13 +5,22 @@ import Link from 'next/link'
 import ArchiveCard from '@/components/ui/ArchiveCard'
 import Button from '@/components/ui/Button'
 import { archiveLetters, CATEGORIES } from '@/lib/sampleData'
-import type { ArchiveLetter, LetterCategory } from '@/lib/types'
+import type { LetterCategory } from '@/lib/types'
 import { cn } from '@/lib/utils'
 
 const ALL = 'all' as const
 type Filter = LetterCategory | typeof ALL
 
-function LetterModal({ letter, onClose }: { letter: ArchiveLetter; onClose: () => void }) {
+interface Letter {
+  id: string
+  body: string
+  closing: string
+  category: string
+  timestamp: string
+  frame: string
+}
+
+function LetterModal({ letter, onClose }: { letter: Letter; onClose: () => void }) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
     document.addEventListener('keydown', onKey)
@@ -61,14 +70,35 @@ function LetterModal({ letter, onClose }: { letter: ArchiveLetter; onClose: () =
 }
 
 export default function ArchivePage() {
-  const [activeFilter, setActiveFilter] = useState<Filter>(ALL)
-  const [selected, setSelected]         = useState<ArchiveLetter | null>(null)
+  const [activeFilter, setActiveFilter]   = useState<Filter>(ALL)
+  const [selected, setSelected]           = useState<Letter | null>(null)
+  const [serverLetters, setServerLetters] = useState<Letter[]>([])
+  const [ownLetter]                       = useState<Letter | null>(() => {
+    if (typeof window === 'undefined') return null
+    try {
+      const stored = localStorage.getItem('her-and-i-published')
+      return stored ? (JSON.parse(stored) as Letter) : null
+    } catch { return null }
+  })
   const handleClose = useCallback(() => setSelected(null), [])
+
+  useEffect(() => {
+    fetch('/api/letters')
+      .then((r) => r.json())
+      .then((data) => { if (Array.isArray(data)) setServerLetters(data) })
+      .catch(() => {})
+  }, [])
+
+  const allLetters: Letter[] = [
+    ...(ownLetter ? [ownLetter] : []),
+    ...serverLetters,
+    ...archiveLetters.map((l) => ({ ...l, frame: l.frame as string })),
+  ]
 
   const filtered =
     activeFilter === ALL
-      ? archiveLetters
-      : archiveLetters.filter((l) => l.category === activeFilter)
+      ? allLetters
+      : allLetters.filter((l) => l.category === activeFilter)
 
   return (
     <div className="min-h-screen pt-24 pb-32 px-6">
@@ -126,7 +156,7 @@ export default function ArchivePage() {
                   closing={letter.closing}
                   category={letter.category}
                   timestamp={letter.timestamp}
-                  frame={letter.frame}
+                  frame={letter.frame as 'none'}
                   className="transition-shadow duration-200 group-hover:shadow-[0_4px_24px_rgba(44,24,16,0.09)]"
                 />
               </div>
