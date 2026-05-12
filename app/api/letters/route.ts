@@ -1,13 +1,16 @@
 import { NextResponse } from 'next/server'
-import { readFileSync } from 'fs'
-import { join } from 'path'
 
-const FILE = join(process.cwd(), 'data', 'letters.json')
+const BIN_URL = `https://api.jsonbin.io/v3/b/${process.env.JSONBIN_BIN_ID}/latest`
 
 export async function GET() {
   try {
-    const letters = JSON.parse(readFileSync(FILE, 'utf-8'))
-    return NextResponse.json(letters)
+    const res = await fetch(BIN_URL, {
+      headers: { 'X-Access-Key': process.env.JSONBIN_API_KEY! },
+      next: { revalidate: 60 },
+    })
+    if (!res.ok) return NextResponse.json([])
+    const data = await res.json()
+    return NextResponse.json(Array.isArray(data.record) ? data.record : [])
   } catch {
     return NextResponse.json([])
   }

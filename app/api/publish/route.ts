@@ -1,15 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { readFileSync, writeFileSync } from 'fs'
-import { join } from 'path'
 
-const FILE = join(process.cwd(), 'data', 'letters.json')
-
-function readLetters() {
-  try {
-    return JSON.parse(readFileSync(FILE, 'utf-8')) as object[]
-  } catch {
-    return []
-  }
+const BIN_URL = `https://api.jsonbin.io/v3/b/${process.env.JSONBIN_BIN_ID}`
+const HEADERS = {
+  'Content-Type': 'application/json',
+  'X-Access-Key': process.env.JSONBIN_API_KEY!,
 }
 
 export async function POST(req: NextRequest) {
@@ -20,18 +14,26 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing fields' }, { status: 400 })
     }
 
+    // Read current letters
+    const getRes = await fetch(`${BIN_URL}/latest`, { headers: HEADERS })
+    const current = getRes.ok ? await getRes.json() : { record: [] }
+    const letters = Array.isArray(current.record) ? current.record : []
+
     const letter = {
       id: `pub-${Date.now()}`,
       body,
       closing,
-      category: category ?? 'to someone, somewhere',
-      timestamp: 'just now',
+      category: category ?? 'recognition',
+      timestamp: new Date().toISOString(),
       frame: 'none',
     }
 
-    const letters = readLetters()
-    letters.unshift(letter)
-    writeFileSync(FILE, JSON.stringify(letters, null, 2))
+    // Prepend and write back
+    await fetch(BIN_URL, {
+      method: 'PUT',
+      headers: HEADERS,
+      body: JSON.stringify([letter, ...letters]),
+    })
 
     return NextResponse.json({ success: true })
   } catch (err) {
